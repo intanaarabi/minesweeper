@@ -9,7 +9,6 @@ function Board() {
 
     useEffect(()=> {
         const board = initializeBoard()
-        console.log(board)
         setBoard(board);
     }, [])
 
@@ -40,6 +39,7 @@ function Board() {
         const [row,col] = tileIndices[i]
         board[row][col].mine = true;
         updateAdjacentCounts(board,row,col)
+        board[row][col].count = 0;
        }
 
         return board
@@ -50,6 +50,7 @@ function Board() {
             for (let j = -1; j <=1; j++) {
                 const adjRow = row + i;
                 const adjCol = col + j;
+
                 if (
                     adjRow >= 0 &&
                     adjRow < MAX_ROWS &&
@@ -58,7 +59,9 @@ function Board() {
                     !(i===0 && j===0) &&
                     !board[adjRow][adjCol].mine
                 ) {
-                    board[adjRow][adjCol].count++;
+                    if (!board[adjRow][adjCol].mine) {
+                        board[adjRow][adjCol].count++;
+                    }
                 }
             }
         }
