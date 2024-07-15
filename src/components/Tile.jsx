@@ -1,7 +1,7 @@
 
 import { FaBomb } from "react-icons/fa";
 
-function Tile({mine,visible,count}) {
+function Tile({mine,visible,count,onClick}) {
     // Is Visible? Show tile block : hidden block
     // Tile block? Show number of adj mines : Show mine
 
@@ -12,7 +12,7 @@ function Tile({mine,visible,count}) {
 
     return (
         <>
-            <div className={`w-10 h-10 rounded-md ${getTileState(visible)}`}>
+            <div  onClick={onClick} className={`w-10 h-10 rounded-md ${getTileState(visible)}`}>
                 { visible && (
                     <div className="h-full flex justify-center items-center">
                         {

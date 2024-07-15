@@ -10,8 +10,7 @@ function Board() {
     const MAX_MINES = 10;
 
     useEffect(()=> {
-        const board = initializeBoard()
-        setBoard(board);
+        initializeBoard()
     }, [])
 
     const initializeBoard = () => {
@@ -44,7 +43,7 @@ function Board() {
         board[row][col].count = 0;
        }
 
-        return board
+        setBoard(board)
     }
 
     const updateAdjacentCounts = (board,row,col) => {
@@ -69,10 +68,16 @@ function Board() {
         }
     }
 
+    const updateBoard = (row,col) => {
+        const newBoard = [...board];
+        newBoard[row][col].visible = true;
+        setBoard(newBoard);
+    }
+
     return (
         <div className="z-10
             border border-[#584561]
-            bg-opacity-[0.03]
+            bg-opacity-[0.02]
             bg-white
             rounded-md
             p-5
@@ -82,7 +87,7 @@ function Board() {
                 {/* Flags Tracker */}
                 <Counter/>
                 {/* Restart */}
-                <Restart/>
+                <Restart onClick={()=>initializeBoard()}/>
                 {/* Timer */}
                 <Counter/>
             {/* Tile */}
@@ -92,7 +97,7 @@ function Board() {
                 {board.map((row, rowIndex) => (
                     <div className="flex flex-row gap-1" key={rowIndex}>
                         {row.map((tile, colIndex) => (
-                            <Tile key={`${rowIndex}-${colIndex}`} mine={tile.mine} count={tile.count} />
+                            <Tile onClick={()=>updateBoard(rowIndex,colIndex)} key={`${rowIndex}-${colIndex}`} mine={tile.mine} count={tile.count} visible={tile.visible}/>
                         ))}
                     </div>
                 )
