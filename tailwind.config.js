@@ -7,10 +7,16 @@ export default {
   theme: {
     extend: {
       colors: {
-        'purple': '#302537',
-        'pink': '#F55A70',
+        'purple': {
+          '100':'#413548',
+          '200':'#2C2232'
+        },
+        'pink': '#DC5266',
         'green': '#00D4AD',
         'orange': '#FE7E75',
+      },
+      fontFamily: {
+        digital: ['"DigitalNumbers"', 'sans-serif'], // Replace 'DigitalNumbers' with your font's name
       },
     },
   },

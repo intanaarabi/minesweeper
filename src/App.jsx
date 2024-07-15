@@ -7,7 +7,7 @@ function App() {
 
   return (
     <>
-      <div className="min-h-screen flex flex-col justify-center items-center bg-purple relative">
+      <div className="min-h-screen flex flex-col justify-center items-center relative">
         <Board></Board>
 
       </div>

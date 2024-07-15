@@ -1,3 +1,5 @@
+import Counter from "./Counter";
+import Restart from "./Restart";
 import Tile from "./Tile"
 import { useEffect, useState } from "react"
 
@@ -68,15 +70,34 @@ function Board() {
     }
 
     return (
-        <div className="flex flex-col">
-            {board.map((row, rowIndex) => (
-                <div className="flex flex-row" key={rowIndex}>
-                    {row.map((tile, colIndex) => (
-                        <Tile key={`${rowIndex}-${colIndex}`} mine={tile.mine} count={tile.count} />
-                    ))}
-                </div>
-             )
-            )}
+        <div className="z-10
+            border border-[#584561]
+            bg-opacity-[0.03]
+            bg-white
+            rounded-md
+            p-5
+            flex gap-5 flex-col">
+            <div className="flex flex-row justify-between align-center">
+            {/* Buttons */}
+                {/* Flags Tracker */}
+                <Counter/>
+                {/* Restart */}
+                <Restart/>
+                {/* Timer */}
+                <Counter/>
+            {/* Tile */}
+            </div>
+
+            <div className="flex flex-col gap-1">
+                {board.map((row, rowIndex) => (
+                    <div className="flex flex-row gap-1" key={rowIndex}>
+                        {row.map((tile, colIndex) => (
+                            <Tile key={`${rowIndex}-${colIndex}`} mine={tile.mine} count={tile.count} />
+                        ))}
+                    </div>
+                )
+                )}
+            </div>
         </div>
     )
 }
