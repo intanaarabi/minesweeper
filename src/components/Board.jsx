@@ -67,105 +67,78 @@ function Board() {
         setBoard(board)
     }
 
-    const updateAdjacentCounts = (board,row,col) => {
-        for (let i = -1; i <=1; i++) {
-            for (let j = -1; j <=1; j++) {
+    const iterateAdjacentTiles = (board, row, col, callback) => {
+        for (let i = -1; i <= 1; i++) {
+            for (let j = -1; j <= 1; j++) {
                 const adjRow = row + i;
                 const adjCol = col + j;
-
+    
                 if (
                     adjRow >= 0 &&
                     adjRow < MAX_ROWS &&
                     adjCol >= 0 &&
                     adjCol < MAX_COLS &&
-                    !(i===0 && j===0) &&
-                    !board[adjRow][adjCol].mine
+                    !(i === 0 && j === 0)
                 ) {
-                    board[adjRow][adjCol].count++;
+                    callback(board, adjRow, adjCol);
                 }
             }
         }
-    }
-
+    };
+    
+    const updateAdjacentCounts = (board, row, col) => {
+        iterateAdjacentTiles(board, row, col, (board, adjRow, adjCol) => {
+            if (!board[adjRow][adjCol].mine) {
+                board[adjRow][adjCol].count++;
+            }
+        });
+    };
+    
     const revealEmptyAdjacentTiles = (board, row, col) => {
         const stack = [[row, col]];
     
         while (stack.length > 0) {
             const [currentRow, currentCol] = stack.pop();
     
-            for (let i = -1; i <= 1; i++) {
-                for (let j = -1; j <= 1; j++) {
-                    const adjRow = currentRow + i;
-                    const adjCol = currentCol + j;
-    
-                    if (
-                        adjRow >= 0 &&
-                        adjRow < MAX_ROWS &&
-                        adjCol >= 0 &&
-                        adjCol < MAX_COLS &&
-                        !(i === 0 && j === 0) &&
-                        !board[adjRow][adjCol].mine &&
-                        !board[adjRow][adjCol].visible
-                    ) {
-                        board[adjRow][adjCol].visible = true;
-                        if (board[adjRow][adjCol].count === 0) {
-                            stack.push([adjRow, adjCol]);
-                        }
+            iterateAdjacentTiles(board, currentRow, currentCol, (board, adjRow, adjCol) => {
+                if (!board[adjRow][adjCol].mine && !board[adjRow][adjCol].visible) {
+                    board[adjRow][adjCol].visible = true;
+                    if (board[adjRow][adjCol].count === 0) {
+                        stack.push([adjRow, adjCol]);
                     }
                 }
-            }
+            });
         }
     };
-
-    const revealAdjacentTiles = (board,row,col) => {
+    
+    const revealAdjacentTiles = (board, row, col) => {
         let gameOver = false;
-        for (let i = -1; i <= 1; i++) {
-            for (let j = -1; j <= 1; j++) {
-                const adjRow = row + i;
-                const adjCol = col + j;
-
-                if (
-                    adjRow >= 0 &&
-                    adjRow < MAX_ROWS &&
-                    adjCol >= 0 &&
-                    adjCol < MAX_COLS &&
-                    !(i === 0 && j === 0) &&
-                    !board[adjRow][adjCol].visible &&
-                    !board[adjRow][adjCol].flag
-                ) {
-                    board[adjRow][adjCol].visible = true;
-                    if ( board[adjRow][adjCol].mine) {
-                        gameOver = true;
-                    }
+    
+        iterateAdjacentTiles(board, row, col, (board, adjRow, adjCol) => {
+            if (!board[adjRow][adjCol].visible && !board[adjRow][adjCol].flag) {
+                board[adjRow][adjCol].visible = true;
+                if (board[adjRow][adjCol].mine) {
+                    gameOver = true;
                 }
             }
-        }
-
+        });
+    
         if (gameOver) {
-            endGame()
+            endGame();
         }
-    }
-
-    const hasAdjacentFlags = (board,row,col) => {
-        for (let i = -1; i <= 1; i++) {
-            for (let j = -1; j <= 1; j++) {
-                const adjRow = row + i;
-                const adjCol = col + j;
-
-                if (
-                    adjRow >= 0 &&
-                    adjRow < MAX_ROWS &&
-                    adjCol >= 0 &&
-                    adjCol < MAX_COLS &&
-                    !(i === 0 && j === 0) &&
-                    board[adjRow][adjCol].flag
-                ) {
-                    return true
-                }
+    };
+    
+    const hasAdjacentFlags = (board, row, col) => {
+        let hasFlags = false;
+    
+        iterateAdjacentTiles(board, row, col, (board, adjRow, adjCol) => {
+            if (board[adjRow][adjCol].flag) {
+                hasFlags = true;
             }
-        }
-        return false
-    }
+        });
+    
+        return hasFlags;
+    };
     
 
     const revealTiles = (row,col) => {
