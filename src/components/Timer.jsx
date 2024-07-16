@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from "react"
 import Counter from "./Counter"
 
-function Timer({gameActive}) {
+function Timer({gameActive, gamePaused}) {
     const [time,setTime] = useState(0)
     const timerRef  = useRef(null)
 
     useEffect(()=>{
-        if (gameActive) {
+        if (gameActive && !gamePaused) {
             timerRef.current = setInterval(()=> {
                 setTime(prevTime => prevTime + 1);
             },1000)
@@ -14,7 +14,7 @@ function Timer({gameActive}) {
             clearInterval(timerRef.current)
         }
         return () => clearInterval(timerRef.current)
-    }, [gameActive])
+    }, [gameActive, gamePaused])
 
     useEffect(()=> {
         if (!gameActive) {

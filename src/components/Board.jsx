@@ -12,7 +12,7 @@ function Board() {
     const [board,setBoard] = useState([])
     const [flagCount, setFlagsCount] = useState(MAX_MINES)
     const [gameActive,setGameActive] = useState(false)
-
+    const [gamePaused,setGamePaused] = useState(false)
 
     useEffect(()=> {
         initializeBoard()
@@ -23,11 +23,12 @@ function Board() {
     }
 
     const endGame = () => {
-        setGameActive(false)
+        setGamePaused(true)
     }
 
     const resetGame = () => {
-        endGame()
+        setGameActive(false)
+        setGamePaused(false)
         initializeBoard()
         setFlagsCount(MAX_MINES)
     }
@@ -169,7 +170,7 @@ function Board() {
                 {/* Restart */}
                 <Restart onClick={()=>resetGame()}/>
                 {/* Timer */}
-                <Timer gameActive={gameActive}/>
+                <Timer gameActive={gameActive} gamePaused={gamePaused}/>
             {/* Tile */}
             </div>
 
@@ -178,8 +179,8 @@ function Board() {
                     <div className="flex flex-row gap-1" key={rowIndex}>
                         {row.map((tile, colIndex) => (
                             <Tile 
-                            onClick={()=>revealTiles(rowIndex,colIndex)}
-                            onRightClick={()=>attachFlag(rowIndex,colIndex)}
+                            onClick={()=> !gamePaused && revealTiles(rowIndex,colIndex)}
+                            onRightClick={()=> !gamePaused && attachFlag(rowIndex,colIndex)}
                             key={`${rowIndex}-${colIndex}`}
                             mine={tile.mine}
                             count={tile.count}
