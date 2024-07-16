@@ -2,22 +2,42 @@ import Counter from "./Counter";
 import Restart from "./Restart";
 import Tile from "./Tile"
 import { useEffect, useState } from "react"
+import Timer from "./Timer";
 
 function Board() {
-    const [board,setBoard] = useState([])
     const MAX_ROWS = 9;
     const MAX_COLS = 9;
     const MAX_MINES = 10;
 
+    const [board,setBoard] = useState([])
+    const [flagCount, setFlagsCount] = useState(MAX_MINES)
+    const [gameActive,setGameActive] = useState(false)
+
+
     useEffect(()=> {
         initializeBoard()
     }, [])
+
+    const startGame = () => {
+        setGameActive(true)
+    }
+
+    const endGame = () => {
+        setGameActive(false)
+    }
+
+    const resetGame = () => {
+        endGame()
+        initializeBoard()
+        setFlagsCount(MAX_MINES)
+    }
 
     const initializeBoard = () => {
         const board = Array.from({length: MAX_ROWS}, () => 
             Array.from({length: MAX_COLS}, () => ({
                     mine: false,
                     visible: false,
+                    flag: false,
                     count: 0,
             }))
         )
@@ -60,18 +80,78 @@ function Board() {
                     !(i===0 && j===0) &&
                     !board[adjRow][adjCol].mine
                 ) {
-                    if (!board[adjRow][adjCol].mine) {
-                        board[adjRow][adjCol].count++;
-                    }
+                    board[adjRow][adjCol].count++;
                 }
             }
         }
     }
 
-    const updateBoard = (row,col) => {
+    const revealAdjacentTiles = (board, row, col) => {
+        const stack = [[row, col]];
+    
+        while (stack.length > 0) {
+            const [currentRow, currentCol] = stack.pop();
+    
+            for (let i = -1; i <= 1; i++) {
+                for (let j = -1; j <= 1; j++) {
+                    const adjRow = currentRow + i;
+                    const adjCol = currentCol + j;
+    
+                    if (
+                        adjRow >= 0 &&
+                        adjRow < MAX_ROWS &&
+                        adjCol >= 0 &&
+                        adjCol < MAX_COLS &&
+                        !(i === 0 && j === 0) &&
+                        !board[adjRow][adjCol].mine &&
+                        !board[adjRow][adjCol].visible
+                    ) {
+                        board[adjRow][adjCol].visible = true;
+                        if (board[adjRow][adjCol].count === 0) {
+                            stack.push([adjRow, adjCol]);
+                        }
+                    }
+                }
+            }
+        }
+    };
+    
+
+    const revealTiles = (row,col) => {
         const newBoard = [...board];
-        newBoard[row][col].visible = true;
+        const tile = newBoard[row][col]
+
+        if (!tile.visible) {
+            tile.visible = true;
+        
+            if (!gameActive) {
+                startGame()
+            }
+    
+            if (tile.mine) {
+                endGame()
+            } else {
+                if (tile.count === 0) {
+                    revealAdjacentTiles(newBoard,row,col)
+                }
+            }
+            setBoard(newBoard);
+        }
+    }
+
+    const attachFlag = (row,col) => {
+        const newBoard = [...board];
+        const tile = newBoard[row][col]
+
+        if (!tile.flag) {
+            setFlagsCount(flagCount-1)
+        } else {
+            setFlagsCount(flagCount+1)
+        }
+        tile.flag = !tile.flag
+
         setBoard(newBoard);
+
     }
 
     return (
@@ -85,11 +165,11 @@ function Board() {
             <div className="flex flex-row justify-between align-center">
             {/* Buttons */}
                 {/* Flags Tracker */}
-                <Counter/>
+                <Counter value={flagCount}/>
                 {/* Restart */}
-                <Restart onClick={()=>initializeBoard()}/>
+                <Restart onClick={()=>resetGame()}/>
                 {/* Timer */}
-                <Counter/>
+                <Timer gameActive={gameActive}/>
             {/* Tile */}
             </div>
 
@@ -97,7 +177,15 @@ function Board() {
                 {board.map((row, rowIndex) => (
                     <div className="flex flex-row gap-1" key={rowIndex}>
                         {row.map((tile, colIndex) => (
-                            <Tile onClick={()=>updateBoard(rowIndex,colIndex)} key={`${rowIndex}-${colIndex}`} mine={tile.mine} count={tile.count} visible={tile.visible}/>
+                            <Tile 
+                            onClick={()=>revealTiles(rowIndex,colIndex)}
+                            onRightClick={()=>attachFlag(rowIndex,colIndex)}
+                            key={`${rowIndex}-${colIndex}`}
+                            mine={tile.mine}
+                            count={tile.count}
+                            visible={tile.visible}
+                            flag={tile.flag}
+                            />
                         ))}
                     </div>
                 )

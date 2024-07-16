@@ -1,7 +1,8 @@
 
 import { FaBomb } from "react-icons/fa";
+import { PiFlagPennantFill } from "react-icons/pi";
 
-function Tile({mine,visible,count,onClick}) {
+function Tile({mine,visible,count,flag,onClick,onRightClick}) {
     // Is Visible? Show tile block : hidden block
     // Tile block? Show number of adj mines : Show mine
 
@@ -9,23 +10,32 @@ function Tile({mine,visible,count,onClick}) {
         return visible ?  "bg-purple-100" : "bg-purple-200";
     }
 
+    const handleContextMenu = (event) => {
+        event.preventDefault();
+        if (onRightClick) {
+            onRightClick();
+        }
+    };
 
     return (
         <>
-            <div  onClick={onClick} className={`w-10 h-10 rounded-md ${getTileState(visible)}`}>
-                { visible && (
+            <div onContextMenu={handleContextMenu} onClick={onClick} className={`w-10 h-10 rounded-md ${getTileState(visible)}`}>
+                {
                     <div className="h-full flex justify-center items-center">
-                        {
+                       { visible && (
                         mine ? (
                             <FaBomb size={20} />
                             ) : (
                                 count > 0 ? `${count}` : ''
                             )
+                         )
                         }
+                        { !visible && flag && (
+                            <PiFlagPennantFill  size={20}  />
+                        )}
                     </div>
-
-                    )
                 }
+             
             </div>
         </>
     )
