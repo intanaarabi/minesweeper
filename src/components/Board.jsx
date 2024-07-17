@@ -119,6 +119,8 @@ function Board() {
                 board[adjRow][adjCol].visible = true;
                 if (board[adjRow][adjCol].mine) {
                     gameOver = true;
+                } else if (board[adjRow][adjCol].count === 0) {
+                    revealEmptyAdjacentTiles(board,adjRow,adjCol)
                 }
             }
         });
@@ -129,15 +131,15 @@ function Board() {
     };
     
     const hasAdjacentFlags = (board, row, col) => {
-        let hasFlags = false;
+        let flagsCount = 0;
     
         iterateAdjacentTiles(board, row, col, (board, adjRow, adjCol) => {
             if (board[adjRow][adjCol].flag) {
-                hasFlags = true;
+                flagsCount += 1;
             }
         });
     
-        return hasFlags;
+        return flagsCount === board[row][col].count;
     };
     
 
