@@ -29,11 +29,11 @@ function Board() {
     const resetGame = () => {
         setGameActive(false)
         setGamePaused(false)
-        initializeBoard()
+        initializeEmptyBoard()
         setFlagsCount(MAX_MINES)
     }
 
-    const initializeBoard = () => {
+    const initializeEmptyBoard = () => {
         const board = Array.from({length: MAX_ROWS}, () => 
             Array.from({length: MAX_COLS}, () => ({
                     mine: false,
@@ -42,29 +42,32 @@ function Board() {
                     count: 0,
             }))
         )
-    
-       //Generate list of possible row,col combinations
-       const tileIndices = []
-       for (let row = 0; row < MAX_ROWS; row++) {
-        for (let col = 0; col < MAX_COLS; col++) {
-            tileIndices.push([row,col])
-        }
-       }
-
-       //Randomize indice list, select first 10
-       for (let i = tileIndices.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i+1));
-        [tileIndices[i], tileIndices[j]] = [tileIndices[j],tileIndices[i]]
-       }
-
-       for (let i=0;i < MAX_MINES; i++) {
-        const [row,col] = tileIndices[i]
-        board[row][col].mine = true;
-        updateAdjacentCounts(board,row,col)
-        board[row][col].count = 0;
-       }
-
         setBoard(board)
+    }
+
+    const placeMines = (board,excludeRow,excludeCol) => {
+        const tileIndices = [];
+        for (let row = 0; row < MAX_ROWS; row++) {
+            for (let col = 0; col < MAX_COLS; col++) {
+                // Exclude the first click position
+                if (row !== excludeRow || col !== excludeCol) {
+                    tileIndices.push([row, col]);
+                }
+            }
+        }
+    
+        // Randomize the tile indices list
+        for (let i = tileIndices.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [tileIndices[i], tileIndices[j]] = [tileIndices[j], tileIndices[i]];
+        }
+    
+        // Place mines
+        for (let i = 0; i < MAX_MINES; i++) {
+            const [row, col] = tileIndices[i];
+            board[row][col].mine = true;
+            updateAdjacentCounts(board, row, col);
+        }
     }
 
     const iterateAdjacentTiles = (board, row, col, callback) => {
@@ -151,8 +154,8 @@ function Board() {
             tile.visible = true;
             if (!gameActive) {
                 startGame()
+                placeMines(newBoard, row, col);   
             }
-
             if (tile.mine) {
                 endGame()
             } else {
