@@ -129,10 +129,22 @@ function Board() {
         });
     
         if (gameOver) {
+            revealMineTiles(board)
             endGame();
         }
     };
+
+    const revealMineTiles = (board) => {
+        board.forEach(row => {
+            row.forEach(cell => {
+                if (cell.mine) {
+                    cell.visible = true;
+                }
+            });
+        });
+    }
     
+
     const hasAdjacentFlags = (board, row, col) => {
         let flagsCount = 0;
     
@@ -157,6 +169,7 @@ function Board() {
                 placeMines(newBoard, row, col);   
             }
             if (tile.mine) {
+                revealMineTiles(newBoard)
                 endGame()
             } else {
                 if (tile.count === 0) {
