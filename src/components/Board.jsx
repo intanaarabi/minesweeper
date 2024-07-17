@@ -26,6 +26,16 @@ function Board() {
         setGamePaused(true)
     }
 
+    const gameWon = () => {
+        endGame()
+        //Success animation
+    }
+
+    const gameOver = () => {
+        endGame()
+        //Lose animation
+    }
+
     const resetGame = () => {
         setGameActive(false)
         setGamePaused(false)
@@ -130,7 +140,7 @@ function Board() {
     
         if (gameOver) {
             revealMineTiles(board)
-            endGame();
+            gameOver();
         }
     };
 
@@ -157,6 +167,23 @@ function Board() {
         return flagsCount === board[row][col].count;
     };
     
+    const userWon = (board) => {
+        return board.every(row =>
+            row.every(col => col.mine || col.visible)
+        );
+    };
+
+    const populateFlags = (board) => {
+        board.forEach(row => 
+            row.forEach(col => {
+                if (col.mine && !col.visible && !col.flag) {
+                   col.flag = true
+                   setFlagsCount(flagCount-1)
+                }
+            })
+        )
+    }
+
 
     const revealTiles = (row,col) => {
         const newBoard = [...board];
@@ -170,7 +197,7 @@ function Board() {
             }
             if (tile.mine) {
                 revealMineTiles(newBoard)
-                endGame()
+                gameOver()
             } else {
                 if (tile.count === 0) {
                     revealEmptyAdjacentTiles(newBoard,row,col)
@@ -180,6 +207,10 @@ function Board() {
             revealAdjacentTiles(newBoard,row,col)
         }
 
+        if (userWon(newBoard)) {
+            populateFlags(newBoard)
+            gameWon();
+        }
         setBoard(newBoard);
     }
 
