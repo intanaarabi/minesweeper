@@ -9,15 +9,19 @@ export default {
       colors: {
         'purple': {
           '100':'#413548',
-          '200':'#2C2232'
+          '200':'#2C2232',
+          '300':'#B8B1FF'
         },
-        'pink': '#DC5266',
-        'green': '#00D4AD',
-        'orange': '#FE7E75',
+        'red':'#DC5266',
+        'pink': '#FFABC4',
+        'green': '#92FFEB',
+        'orange': '#FAB48D',
       },
       fontFamily: {
         digital: ['"DigitalNumbers"', 'sans-serif'], // Replace 'DigitalNumbers' with your font's name
+        alata: ['"Alata"', 'sans-serif']
       },
+      
     },
   },
   plugins: [],
