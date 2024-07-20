@@ -9,7 +9,6 @@ function App() {
     <>
       <div className="min-h-screen flex flex-col justify-center items-center relative">
         <Board></Board>
-
       </div>
       <ParticlesBackground/>
     </>

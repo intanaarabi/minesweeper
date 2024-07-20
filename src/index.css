@@ -11,11 +11,17 @@
     font-weight: normal;
     font-style: normal;
   }
-  
+
+@font-face {
+  font-family: 'Baloo';
+  src: url('./assets/fonts/Baloo-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 
 .alata-regular {
   font-family: "Alata", sans-serif;
   font-weight: 400;
   font-style: normal;
 }
-  

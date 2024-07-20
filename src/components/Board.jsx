@@ -3,6 +3,7 @@ import Restart from "./Restart";
 import Tile from "./Tile"
 import { useEffect, useState } from "react"
 import Timer from "./Timer";
+import SuccessModal from './modals/SuccessModal'
 
 function Board() {
     const MAX_ROWS = 9;
@@ -231,7 +232,8 @@ function Board() {
     }
 
     return (
-        <div className="z-10
+        <>
+         <div className="z-10
             border border-[#584561]
             bg-opacity-[0.02]
             bg-white
@@ -268,6 +270,9 @@ function Board() {
                 )}
             </div>
         </div>
+         <SuccessModal isOpen={true}/>
+</>
+       
     )
 }
 

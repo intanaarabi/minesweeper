@@ -22,7 +22,7 @@ function Tile({mine,visible,count,flag,onClick,onRightClick}) {
                 return "text-purple-300"
             }
             case 4: {
-                return "text-orange"
+                return "text-orange-100"
             }
         }
 
