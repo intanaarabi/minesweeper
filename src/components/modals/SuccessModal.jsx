@@ -1,6 +1,7 @@
 import ReactDOM from 'react-dom';
 
-function SuccessModal({ isOpen, onClose }) {
+function SuccessModal({ isOpen, finalTime, onClose }) {
+    const formattedTime = finalTime?.toString().padStart(3, '0');
 
     if (!isOpen) return null;
 
@@ -17,7 +18,7 @@ function SuccessModal({ isOpen, onClose }) {
                             <p className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[45px] ">YOU WIN</p>
                         </div>
                     </div>
-                    <div className="text-4xl tracking-wide ">000</div>
+                    <div className="text-4xl tracking-wide ">{formattedTime}</div>
                     <button onClick={onClose} className="absolute bg-orange-200 bottom-[-40px] text-2xl px-6 py-2 rounded-lg">PLAY AGAIN</button>
             </div>
             </div>

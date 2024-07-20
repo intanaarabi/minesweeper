@@ -16,6 +16,7 @@ function Board() {
     const [gamePaused,setGamePaused] = useState(false)
     const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
     const [isFailedModalOpen, setIsFailedModalOpen] = useState(false);
+    const [finalTime, setFinalTime] = useState(0);
 
     const toggleFailedModal = () => {
         setIsFailedModalOpen(!isFailedModalOpen);
@@ -259,7 +260,7 @@ function Board() {
                 {/* Restart */}
                 <Restart onClick={()=>resetGame()}/>
                 {/* Timer */}
-                <Timer gameActive={gameActive} gamePaused={gamePaused}/>
+                <Timer gameActive={gameActive} gamePaused={gamePaused} onPausedTime={(time)=> setFinalTime(time)}/>
             {/* Tile */}
             </div>
 
@@ -282,7 +283,7 @@ function Board() {
                 )}
             </div>
         </div>
-        <SuccessModal isOpen={isSuccessModalOpen} onClose={toggleSuccessModal}/>
+        <SuccessModal isOpen={isSuccessModalOpen} onClose={toggleSuccessModal} finalTime={finalTime}/>
         </>
        
     )
