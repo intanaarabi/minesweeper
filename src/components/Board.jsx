@@ -14,6 +14,18 @@ function Board() {
     const [flagCount, setFlagsCount] = useState(MAX_MINES)
     const [gameActive,setGameActive] = useState(false)
     const [gamePaused,setGamePaused] = useState(false)
+    const [isSuccessModalOpen, setIsSuccessModalOpen] = useState(false);
+    const [isFailedModalOpen, setIsFailedModalOpen] = useState(false);
+
+    const toggleFailedModal = () => {
+        setIsFailedModalOpen(!isFailedModalOpen);
+        resetGame()
+    }
+
+    const toggleSuccessModal = () => {
+        setIsSuccessModalOpen(!isSuccessModalOpen);
+        resetGame()
+    }
 
     useEffect(()=> {
         resetGame()
@@ -29,14 +41,14 @@ function Board() {
 
     const gameWon = () => {
         endGame()
-        //Success animation
+        setIsSuccessModalOpen(true)
     }
 
     const gameOver = () => {
         endGame()
-        //Lose animation
+        setIsFailedModalOpen(true)
     }
-
+  
     const resetGame = () => {
         setGameActive(false)
         setGamePaused(false)
@@ -270,8 +282,8 @@ function Board() {
                 )}
             </div>
         </div>
-         <SuccessModal isOpen={true}/>
-</>
+        <SuccessModal isOpen={isSuccessModalOpen} onClose={toggleSuccessModal}/>
+        </>
        
     )
 }
