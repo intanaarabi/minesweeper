@@ -20,6 +20,10 @@ export default {
         'orange': {  
           '100':'#FAB48D',
           '200':'#E87F44'
+        },
+        'blue': {
+          '100':'#454A61',
+          '200':'#232232'
         }
       },
       fontFamily: {

@@ -4,6 +4,7 @@ import Tile from "./Tile"
 import { useEffect, useState } from "react"
 import Timer from "./Timer";
 import SuccessModal from './modals/SuccessModal'
+import FailedModal from "./modals/FailedModal";
 
 function Board() {
     const MAX_ROWS = 9;
@@ -284,6 +285,7 @@ function Board() {
             </div>
         </div>
         <SuccessModal isOpen={isSuccessModalOpen} onClose={toggleSuccessModal} finalTime={finalTime}/>
+        <FailedModal  isOpen={isFailedModalOpen} onClose={toggleFailedModal} />
         </>
        
     )
